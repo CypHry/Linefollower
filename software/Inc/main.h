@@ -70,6 +70,8 @@ extern "C" {
 
 /* USER CODE END EM */
 
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
@@ -80,6 +82,28 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define Led_Pin_Pin GPIO_PIN_13
 #define Led_Pin_GPIO_Port GPIOC
+#define SENSOR_1_Pin GPIO_PIN_0
+#define SENSOR_1_GPIO_Port GPIOA
+#define SENSOR_2_Pin GPIO_PIN_1
+#define SENSOR_2_GPIO_Port GPIOA
+#define SENSOR_3_Pin GPIO_PIN_2
+#define SENSOR_3_GPIO_Port GPIOA
+#define SENSOR_4_Pin GPIO_PIN_3
+#define SENSOR_4_GPIO_Port GPIOA
+#define SENSOR_5_Pin GPIO_PIN_4
+#define SENSOR_5_GPIO_Port GPIOA
+#define PWMA_Pin GPIO_PIN_0
+#define PWMA_GPIO_Port GPIOB
+#define PWMB_Pin GPIO_PIN_1
+#define PWMB_GPIO_Port GPIOB
+#define AIN4_Pin GPIO_PIN_9
+#define AIN4_GPIO_Port GPIOA
+#define AIN3_Pin GPIO_PIN_10
+#define AIN3_GPIO_Port GPIOA
+#define AIN2_Pin GPIO_PIN_11
+#define AIN2_GPIO_Port GPIOA
+#define AIN1_Pin GPIO_PIN_12
+#define AIN1_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
