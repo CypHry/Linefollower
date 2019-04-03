@@ -12,6 +12,7 @@
 #define SENSORS_TAB_R2 	0x02 // 00000010
 #define SENSORS_TAB_R3 	0x03 // 00000011
 #define SENSORS_TAB_R4 	0x01 // 00000001
+#define SENSORS_NO_LINE   0x00 // 00000000
 
 
 typedef enum
@@ -22,17 +23,18 @@ typedef enum
 
 typedef enum
 {
-	ERROR_l4, 	// sensors: 1 0 0 0 0
-	ERROR_l3, 	// sensors: 1 1 0 0 0
-	ERROR_l2, 	// sensors: 0 1 0 0 0
-	ERROR_l1, 	// sensors: 0 1 1 0 0
-	ERROR_0, 	// sensors: 0 0 1 0 0
-	ERROR_r1, 	// sensors: 0 0 1 1 0
-	ERROR_r2, 	// sensors: 0 0 0 1 0
-	ERROR_r3,  	// sensors: 0 0 0 1 1
-	ERROR_r4 	// sensors: 0 0 0 0 1
-} PD_ERROR_TYPE; // not sure i need that yet
+	ERROR_L4 = -4, 	// sensors: 1 0 0 0 0
+	ERROR_L3 = -3, 	// sensors: 1 1 0 0 0
+	ERROR_L2 = -2, 	// sensors: 0 1 0 0 0
+	ERROR_L1 = -1, 	// sensors: 0 1 1 0 0
+	ERROR_0 = 0, 	// sensors: 0 0 1 0 0
+	ERROR_R1 = 1, 	// sensors: 0 0 1 1 0
+	ERROR_R2 = 2, 	// sensors: 0 0 0 1 0
+	ERROR_R3 = 3,  	// sensors: 0 0 0 1 1
+	ERROR_R4 = 4 	// sensors: 0 0 0 0 1
+} PD_ERROR_TYPE;
 
-PD_STATUS PD_SetError(uint8_t* sensors_tab); // not sure i need that yet
+PD_STATUS PD_SetError(uint8_t* sensors_tab); 
+PD_STATUS PD_CallculateErrorValue(); // error value type?
 
 #endif //__PD_CONTROLLER_H
