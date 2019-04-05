@@ -14,10 +14,14 @@ void LF_Init(LF* lf)
 	lf->pulse_R = 0;
 }
 
-void LF_SetPWMPulse(LF* lf, PD_CONTROLLER pd)
+LF_STATUS LF_SetPWMPulse(LF* lf, PD_CONTROLLER pd)
 {
+	if(lf->mode == STOP)
+		return LF_ERROR;
 	lf->pulse_L = BASE_PWM_PULSE + pd.error_value;
 	lf->pulse_R = BASE_PWM_PULSE - pd.error_value;
+
+	return LF_OK;
 }
 
 LF_STATUS LF_StartFollowing(LF* lf, uint32_t sensors_tab)

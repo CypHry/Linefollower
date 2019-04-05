@@ -34,6 +34,6 @@ typedef struct
 void LF_Init(LF* lf);
 LF_STATUS LF_StartFollowing(LF* lf);
 void LF_Stop(LF* lf);
-void LF_SetPWMPulse(LF* lf, PD_CONTROLLER pd);
+LF_STATUS LF_SetPWMPulse(LF* lf, PD_CONTROLLER pd);
 
 #endif /* __LINEFOLLOWER_h */
