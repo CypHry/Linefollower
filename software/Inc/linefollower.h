@@ -32,7 +32,7 @@ typedef struct
 } LF;
 
 void LF_Init(LF* lf);
-LF_STATUS LF_StartFollowing(LF* lf);
+LF_STATUS LF_StartFollowing(LF* lf, uint8_t sensors_tab);
 void LF_Stop(LF* lf);
 LF_STATUS LF_SetPWMPulse(LF* lf, PD_CONTROLLER pd);
 

@@ -24,7 +24,7 @@ LF_STATUS LF_SetPWMPulse(LF* lf, PD_CONTROLLER pd)
 	return LF_OK;
 }
 
-LF_STATUS LF_StartFollowing(LF* lf, uint32_t sensors_tab)
+LF_STATUS LF_StartFollowing(LF* lf, uint8_t sensors_tab)
 {
 	if(sensors_tab != SENSORS_NO_LINE)
 	{

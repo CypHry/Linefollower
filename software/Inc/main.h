@@ -105,7 +105,8 @@ void Error_Handler(void);
 #define AIN1_Pin GPIO_PIN_12
 #define AIN1_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
-
+#define ADC_TIMEOUT 10
+#define ADC_THRESHOLD 2000
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
