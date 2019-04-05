@@ -7,6 +7,12 @@
 
 #include "PD_controller.h"
 
+void PD_Init(PD_CONTROLLER* pd)
+{
+	pd->current_error = ERROR_0;
+	pd->previous_error = ERROR_0;
+	pd->error_value = 0;
+}
 
 PD_STATUS PD_SetError(PD_CONTROLLER* pd, uint8_t* sensors_tab)
 {
@@ -43,12 +49,6 @@ void PD_CallculateErrorValue(PD_CONTROLLER* pd)
 	uint32_t D = pd->current_error - pd->previous_error;
 
 	pd->error_value = Kp*P + Kd*D;
-}
-
-void PD_SetPWMPulse(PD_CONTROLLER* pd, uint32_t* pulse_L, uint32_t* pulse_R)
-{
-	pulse_L = BASE_PULSE + pd->error_value;
-	pulse_R = BASE_PULSE - pd->error_value;
 }
 
 

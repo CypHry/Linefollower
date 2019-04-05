@@ -44,7 +44,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stm32f1xx_hal.h"
-#include "PD_controller.h"
+#include "linefollower.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -69,6 +69,8 @@ TIM_HandleTypeDef htim3;
 
 /* USER CODE BEGIN PV */
 PD_CONTROLLER pd;
+LF lf;
+uint8_t sensors_tab = 0x00;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -77,7 +79,7 @@ static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
-
+void ReadSensors(uint32_t sensors_tab);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -116,7 +118,8 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-
+  PD_Init(&pd);
+  LF_Init(&lf);
   /* USER CODE END 2 */
 
   /* Infinite loop */

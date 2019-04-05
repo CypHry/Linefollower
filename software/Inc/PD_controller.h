@@ -19,7 +19,8 @@
 #define Kp					200.0 // tbc
 #define Kd  				0.0   // tbc
 
-#define BASE_PULSE 			0x7530// 30000 max: 0xFFFF
+#define BASE_PWM_PULSE 		0x7530// 30000 max: 0xFFFF
+
 
 typedef enum
 {
@@ -47,9 +48,9 @@ typedef struct
 	uint32_t error_value;
 } PD_CONTROLLER;
 
+void PD_Init(PD_CONTROLLER* pd);
 PD_STATUS PD_SetError(PD_CONTROLLER* pd, uint8_t* sensors_tab);
 void PD_CallculateErrorValue(PD_CONTROLLER* pd);
-void PD_SetPWMPulse(PD_CONTROLLER* pd, uint32_t* pulse_L, uint32_t* pulse_R);
 
 
 #endif //__PD_CONTROLLER_H
