@@ -68,7 +68,7 @@ ADC_HandleTypeDef hadc1;
 TIM_HandleTypeDef htim3;
 
 /* USER CODE BEGIN PV */
-
+PD_CONTROLLER pd;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

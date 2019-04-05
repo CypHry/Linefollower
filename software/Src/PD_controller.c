@@ -7,30 +7,51 @@
 
 #include "PD_controller.h"
 
-PD_ERROR_TYPE current_error;
 
-PD_STATUS PD_SetError(uint8_t* sensors_tab)
+PD_STATUS PD_SetError(PD_CONTROLLER* pd, uint8_t* sensors_tab)
 {
-	if(*sensors_tab == SENSORS_TAB_L4)	// sensors: 1 0 0 0 0
-		current_error = ERROR_L4;
+	pd->previous_error = pd->current_error;
+
+	if(*sensors_tab == SENSORS_TAB_L4 || *sensors_tab == SENSORS_LINE)	// sensors: 1 0 0 0 0
+		pd->current_error = ERROR_L4;
 	else if(*sensors_tab == SENSORS_TAB_L3)	// sensors: 1 1 0 0 0
-		current_error = ERROR_L3;
+		pd->current_error = ERROR_L3;
 	else if(*sensors_tab == SENSORS_TAB_L2)	// sensors: 0 1 0 0 0
-		current_error = ERROR_L2;
+		pd->current_error = ERROR_L2;
 	else if(*sensors_tab == SENSORS_TAB_L1)	// sensors: 0 1 1 0 0
-			current_error = ERROR_L1;
+		pd->current_error = ERROR_L1;
 	else if(*sensors_tab == SENSORS_TAB_0)	// sensors: 0 0 1 0 0
-			current_error = ERROR_0;
+		pd->current_error = ERROR_0;
 	else if(*sensors_tab == SENSORS_TAB_R1)	// sensors: 0 0 1 1 0
-			current_error = ERROR_R1;
+		pd->current_error = ERROR_R1;
 	else if(*sensors_tab == SENSORS_TAB_R2)	// sensors: 0 0 0 1 0
-			current_error = ERROR_R2;
+		pd->current_error = ERROR_R2;
 	else if(*sensors_tab == SENSORS_TAB_R3)	// sensors: 0 0 0 1 1
-			current_error = ERROR_R3;
+		pd->current_error = ERROR_R3;
 	else if(*sensors_tab == SENSORS_TAB_R4)	// sensors: 0 0 0 0 1
-			current_error = ERROR_R4;
+		pd->current_error = ERROR_R4;
 	else
 		return PD_ERROR;
 
 	return PD_OK;
 }
+
+
+void PD_CallculateErrorValue(PD_CONTROLLER* pd)
+{
+	uint32_t P = pd->current_error;
+	uint32_t D = pd->current_error - pd->previous_error;
+
+	pd->error_value = Kp*P + Kd*D;
+}
+
+void PD_SetPWMPulse(PD_CONTROLLER* pd, uint32_t* pulse_L, uint32_t* pulse_R)
+{
+	pulse_L = BASE_PULSE + pd->error_value;
+	pulse_R = BASE_PULSE - pd->error_value;
+}
+
+
+
+
+
