@@ -19,8 +19,6 @@
 #define Kp					200.0 // tbc
 #define Kd  				0.0   // tbc
 
-#define BASE_PWM_PULSE 		0x7530// 30000 max: 0xFFFF
-
 
 typedef enum
 {

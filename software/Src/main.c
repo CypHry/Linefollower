@@ -126,6 +126,16 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  ReadSensors(&sensors_tab);
+	  if(PD_SetError(&pd, &sensors_tab))
+		  LF_Stop(&lf);
+	  else
+	  {
+		  PD_CallculateErrorValue(&pd);
+		  LF_SetPWMPulse(&lf, pd);
+	  }
+	  //hal pwm lf->pulse_L
+	  //hal pwm lf->pulse_R
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
