@@ -43,7 +43,7 @@ typedef struct
 {
 	PD_ERROR_TYPE current_error;
 	PD_ERROR_TYPE previous_error;
-	uint32_t error_value;
+	int32_t output_value;
 } PD_CONTROLLER;
 
 void PD_Init(PD_CONTROLLER* pd);

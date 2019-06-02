@@ -10,7 +10,7 @@
 
 #include "PD_controller.h"
 
-#define BASE_PWM_PULSE 		0x7530// 30000 max: 0xFFFF
+#define BASE_PWM_PULSE 		150
 
 typedef struct
 {

@@ -11,7 +11,7 @@ void PD_Init(PD_CONTROLLER* pd)
 {
 	pd->current_error = ERROR_0;
 	pd->previous_error = ERROR_0;
-	pd->error_value = 0;
+	pd->output_value = 0;
 }
 
 PD_STATUS PD_SetError(PD_CONTROLLER* pd, uint8_t* sensors_tab)
@@ -48,7 +48,7 @@ void PD_CallculateErrorValue(PD_CONTROLLER* pd)
 	uint32_t P = pd->current_error;
 	uint32_t D = pd->current_error - pd->previous_error;
 
-	pd->error_value = Kp*P + Kd*D;
+	pd->output_value = Kp*P + Kd*D;
 }
 
 
