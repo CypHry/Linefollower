@@ -129,13 +129,13 @@ int main(void)
   HAL_Delay(100);
   HAL_GPIO_WritePin(STB_GPIO_Port, STB_Pin, SET);
   HAL_Delay(100);
-  HAL_GPIO_WritePin(AIN1_GPIO_Port, AIN1_Pin, RESET);
-  HAL_GPIO_WritePin(AIN2_GPIO_Port, AIN2_Pin, SET);
+  HAL_GPIO_WritePin(AIN1_GPIO_Port, AIN1_Pin, SET);
+  HAL_GPIO_WritePin(AIN2_GPIO_Port, AIN2_Pin, RESET);
   HAL_GPIO_WritePin(BIN1_GPIO_Port, BIN1_Pin, RESET);
   HAL_GPIO_WritePin(BIN2_GPIO_Port, BIN2_Pin, SET);
 
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, lf.pulse_R);
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, lf.pulse_L);
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, lf.pulse_L);
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, lf.pulse_R);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
   while (1)
@@ -148,8 +148,8 @@ int main(void)
 		  PD_CallculateErrorValue(&pd);
 		  LF_SetPWMPulse(&lf, pd);
 	  }
-	  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, lf.pulse_R);
-	  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, lf.pulse_L);
+	  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, lf.pulse_L);
+	  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, lf.pulse_R);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

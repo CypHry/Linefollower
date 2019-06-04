@@ -14,8 +14,8 @@
 
 typedef struct
 {
-	uint32_t pulse_L;
-	uint32_t pulse_R;
+	int32_t pulse_L;
+	int32_t pulse_R;
 } LF;
 
 void LF_Init(LF* lf);
