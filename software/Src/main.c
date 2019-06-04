@@ -134,8 +134,8 @@ int main(void)
   HAL_GPIO_WritePin(BIN1_GPIO_Port, BIN1_Pin, RESET);
   HAL_GPIO_WritePin(BIN2_GPIO_Port, BIN2_Pin, SET);
 
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, lf.pulse_L);
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, lf.pulse_R);
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, lf.pulse_R);
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, lf.pulse_L);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
   while (1)
