@@ -124,22 +124,37 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, lf.pulse_L);
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, lf.pulse_R);
+  HAL_ADC_Start(&hadc1);
+
+  HAL_Delay(100);
+  HAL_GPIO_WritePin(STB_GPIO_Port, STB_Pin, SET);
+  HAL_Delay(100);
+  HAL_GPIO_WritePin(AIN1_GPIO_Port, AIN1_Pin, SET);
+  HAL_GPIO_WritePin(AIN2_GPIO_Port, AIN2_Pin, RESET);
+  HAL_GPIO_WritePin(BIN1_GPIO_Port, BIN1_Pin, SET);
+  HAL_GPIO_WritePin(BIN2_GPIO_Port, BIN2_Pin, RESET);
+
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, 50);
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, 50);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
+
+  //__HAL_TIM_SET_COMPARE(&htim3, ThIM_CHANNEL_3, lf.pulse_L);
+  //__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, lf.pulse_R);
+  //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+  //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
   while (1)
-  {
+  {/*
 	  ReadSensors(&sensors_tab);
-	  if(PD_SetError(&pd, &sensors_tab))
+	  if(PD_SetError(&pd, &sensors_tab) == PD_ERROR)
 		  LF_Stop(&lf);
 	  else
 	  {
 		  PD_CallculateErrorValue(&pd);
 		  LF_SetPWMPulse(&lf, pd);
-	  }
-	  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, lf.pulse_L);
-	  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, lf.pulse_R);
+	  }*/
+	 // __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, lf.pulse_R);
+	 // __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, lf.pulse_L);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -338,7 +353,8 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(Led_Pin_GPIO_Port, Led_Pin_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, AIN4_Pin|AIN3_Pin|AIN2_Pin|AIN1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, AIN2_Pin|AIN1_Pin|STB_Pin|BIN1_Pin 
+                          |BIN2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : Led_Pin_Pin */
   GPIO_InitStruct.Pin = Led_Pin_Pin;
@@ -347,29 +363,31 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(Led_Pin_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : AIN4_Pin AIN3_Pin AIN2_Pin AIN1_Pin */
-  GPIO_InitStruct.Pin = AIN4_Pin|AIN3_Pin|AIN2_Pin|AIN1_Pin;
+  /*Configure GPIO pins : AIN2_Pin AIN1_Pin STB_Pin BIN1_Pin 
+                           BIN2_Pin */
+  GPIO_InitStruct.Pin = AIN2_Pin|AIN1_Pin|STB_Pin|BIN1_Pin 
+                          |BIN2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 }
 
 /* USER CODE BEGIN 4 */
 void ReadSensors(uint8_t* sensors_tab)
 {
-	int i;
-	uint32_t adc;
-	sensors_tab = 0x00;
+	uint8_t i;
+	uint32_t adc = 0;
+	*sensors_tab = 0;
+
 	for(i = 0; i < 5; i++)
 	{
-		HAL_ADC_Start(&hadc1);
+		*sensors_tab = *sensors_tab>>1;
 		HAL_ADC_PollForConversion(&hadc1, ADC_TIMEOUT);
 		adc = HAL_ADC_GetValue(&hadc1);
 		if(adc < ADC_THRESHOLD)
-			*sensors_tab |= 0x01;
-		*sensors_tab<<=1;
+			*sensors_tab |= 12;
 	}
 }
 
