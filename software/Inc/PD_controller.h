@@ -16,7 +16,7 @@
 #define SENSORS_LINE		0x1F // 00011111
 
 
-#define Kp					200.0 // tbc
+#define Kp					20.0 // tbc
 #define Kd  				0.0   // tbc
 
 
