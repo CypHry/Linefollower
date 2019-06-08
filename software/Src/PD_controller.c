@@ -18,7 +18,7 @@ PD_STATUS PD_SetError(PD_CONTROLLER* pd, uint8_t* sensors_tab)
 {
 	pd->previous_error = pd->current_error;
 
-	if(*sensors_tab == SENSORS_TAB_L4 || *sensors_tab == SENSORS_LINE)	// sensors: 1 0 0 0 0
+	if(*sensors_tab == SENSORS_TAB_L4)	// sensors: 1 0 0 0 0
 		pd->current_error = ERROR_L4;
 	else if(*sensors_tab == SENSORS_TAB_L3)	// sensors: 1 1 0 0 0
 		pd->current_error = ERROR_L3;
@@ -26,7 +26,7 @@ PD_STATUS PD_SetError(PD_CONTROLLER* pd, uint8_t* sensors_tab)
 		pd->current_error = ERROR_L2;
 	else if(*sensors_tab == SENSORS_TAB_L1)	// sensors: 0 1 1 0 0
 		pd->current_error = ERROR_L1;
-	else if(*sensors_tab == SENSORS_TAB_0)	// sensors: 0 0 1 0 0
+	else if(*sensors_tab == SENSORS_TAB_0 || *sensors_tab == SENSORS_LINE)	// sensors: 0 0 1 0 0
 		pd->current_error = ERROR_0;
 	else if(*sensors_tab == SENSORS_TAB_R1)	// sensors: 0 0 1 1 0
 		pd->current_error = ERROR_R1;

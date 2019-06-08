@@ -17,7 +17,7 @@ void LF_Init(LF* lf)
 void LF_SetPWMPulse(LF* lf, PD_CONTROLLER pd)
 {
 	lf->pulse_L = BASE_PWM_PULSE + pd.output_value;
-	lf->pulse_R = BASE_PWM_PULSE - pd.output_value;
+	//lf->pulse_R = BASE_PWM_PULSE - pd.output_value + 120;
 }
 
 

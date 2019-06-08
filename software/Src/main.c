@@ -64,22 +64,27 @@
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
+DMA_HandleTypeDef hdma_adc1;
 
 TIM_HandleTypeDef htim3;
 
 /* USER CODE BEGIN PV */
+uint32_t temp[5];
+uint8_t flag = 0;
 PD_CONTROLLER pd;
 LF lf;
 uint8_t sensors_tab = 0x00;
+uint32_t adc = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
-void ReadSensors(uint8_t* sensors_tab);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -94,7 +99,6 @@ void ReadSensors(uint8_t* sensors_tab);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -115,32 +119,33 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_ADC1_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-  PD_Init(&pd);
-  LF_Init(&lf);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  HAL_ADC_Start(&hadc1);
-
   HAL_Delay(100);
   HAL_GPIO_WritePin(STB_GPIO_Port, STB_Pin, SET);
   HAL_Delay(100);
-  HAL_GPIO_WritePin(AIN1_GPIO_Port, AIN1_Pin, SET);
-  HAL_GPIO_WritePin(AIN2_GPIO_Port, AIN2_Pin, RESET);
+  HAL_GPIO_WritePin(AIN1_GPIO_Port, AIN1_Pin, RESET);
+  HAL_GPIO_WritePin(AIN2_GPIO_Port, AIN2_Pin, SET);
   HAL_GPIO_WritePin(BIN1_GPIO_Port, BIN1_Pin, RESET);
   HAL_GPIO_WritePin(BIN2_GPIO_Port, BIN2_Pin, SET);
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, lf.pulse_L);
-
   __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, lf.pulse_R);
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, lf.pulse_L);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
+
+  HAL_ADC_Start_DMA(&hadc1, temp, 5);
+  HAL_ADC_Start_IT(&hadc1);
+
   while (1)
   {
-	  ReadSensors(&sensors_tab);
+	  HAL_ADC_Start_IT(&hadc1);
+
 	  if(PD_SetError(&pd, &sensors_tab) == PD_ERROR)
 		  LF_Stop(&lf);
 	  else
@@ -148,9 +153,8 @@ int main(void)
 		  PD_CallculateErrorValue(&pd);
 		  LF_SetPWMPulse(&lf, pd);
 	  }
+	  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, BASE_PWM_PULSE);
 	  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, lf.pulse_L);
-
-	  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, lf.pulse_R);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -222,7 +226,7 @@ static void MX_ADC1_Init(void)
   */
   hadc1.Instance = ADC1;
   hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
-  hadc1.Init.ContinuousConvMode = ENABLE;
+  hadc1.Init.ContinuousConvMode = DISABLE;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
@@ -235,7 +239,7 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_71CYCLES_5;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -331,6 +335,21 @@ static void MX_TIM3_Init(void)
 
 }
 
+/** 
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void) 
+{
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+
+}
+
 /**
   * @brief GPIO Initialization Function
   * @param None
@@ -371,22 +390,30 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void ReadSensors(uint8_t* sensors_tab)
+void ReadSensors()
 {
-	uint8_t i;
-	uint32_t adc = 0;
-	*sensors_tab = 0;
 
-	for(i = 0; i < 5; i++)
-	{
-		*sensors_tab = *sensors_tab>>1;
-		HAL_ADC_PollForConversion(&hadc1, ADC_TIMEOUT);
-		adc = HAL_ADC_GetValue(&hadc1);
-		if(adc < ADC_THRESHOLD)
-			*sensors_tab |= 12;
-	}
 }
 
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+	sensors_tab = 0;
+	if(temp[4] < ADC_THRESHOLD)
+		sensors_tab |= 1;
+	sensors_tab<<=1;
+	if(temp[3] < ADC_THRESHOLD)
+		sensors_tab |= 1;
+	sensors_tab<<=1;
+	if(temp[2] < ADC_THRESHOLD)
+		sensors_tab |= 1;
+	sensors_tab<<=1;
+	if(temp[1] < ADC_THRESHOLD)
+		sensors_tab |= 1;
+	sensors_tab<<=1;
+	if(temp[0] < ADC_THRESHOLD)
+		sensors_tab |= 1;
+
+}
 /* USER CODE END 4 */
 
 /**

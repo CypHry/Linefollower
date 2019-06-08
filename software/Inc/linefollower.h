@@ -10,7 +10,7 @@
 
 #include "PD_controller.h"
 
-#define BASE_PWM_PULSE 		150
+#define BASE_PWM_PULSE 		200
 
 typedef struct
 {
