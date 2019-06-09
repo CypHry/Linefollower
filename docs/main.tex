@@ -84,12 +84,12 @@ Projekt ma na celu stworzenie linefollowera - robota klasy k(2,0) poruszającego
 Robot będzie wykrywać linię za pomocą zestawu czujników odbiciowych. Sygnał z czujników przekazywany będzie do mikrokontrolera, który w oparciu o dane z czujników, będzie sterował silnikami prądu stałego pełniącymi rolę napędową kół. Całość zasilana będzie akumulatorem litowo-polimerowym.
 
 Sterowanie silnikami odbywać się będzie przy pomocy mostków-H. Algorytm sterujący wykorzystywać będzie regulator PD (w którym błąd będzie określany na podstawie sygnałów z czujników i odzwierciedlać będzie odbieganie toru jazdy od aktualnego kierunku, w którym linefollower się porusza), aby płynnie reagować na zmiany toru jazdy.
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{architektura.png}
-	\caption{Architektura systemu}
-	\label{fig:Architektura}
-\end{figure}
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[width=0.8\textwidth]{architektura.png}
+%	\caption{Architektura systemu}
+%	\label{fig:Architektura}
+%\end{figure}
 
 
 %\section{Założenia projektowe}
@@ -109,29 +109,36 @@ Sterowanie silnikami odbywać się będzie przy pomocy mostków-H. Algorytm ster
 \newpage
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.9\textheight,angle=90]{konfiguracja_clk.png}
+	\includegraphics[width=\textwidth]{konfiguracja_clk.png}
 	\caption{Konfiguracja zegarów mikrokontrolera}
 	\label{fig:KonfiguracjaZegara}
 \end{figure}
 
 %Obecne we wszystkich dokumentach
-\subsection{Konfiguracja pinów}
 
+\subsection{Konfiguracja pinów}
+\noindent Poniżej zawarto konfiguracje pinów mikrokontrolera wraz z etykietami i trybem pracy.
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|l|}
 		\hline
 		Numer pinu	&	PIN & Tryb pracy & Funkcja/etykieta\\
 		\hline
-		8&	PC14 & OSC32\_IN &	RCC\_OSC32\_IN	\\
-		9&	PC15 & OSC32\_OUT &	RCC\_OSC32\_OUT	\\
-		12&	PH0 & OSC\_IN &	RCC\_OSC\_IN	\\
-		13&	PH1 & OSC\_OUT &	RCC\_OSC\_OUT	\\
-		39&	PE8 &	GPIO\_Output&	LD\_Green \\
-		86&	PD5 &	USART2\_TX&	USART2\_TX\\
-		87&	PD6 &	USART2\_RX&	USART2\_RX\\
-		92&	PB6 &	I2C1\_SCL&	I2C1\_SCL\\
-		93&	PB7 &	I2C1\_SDA&	I2C1\_SDA\\
+		2&	PC13 & GPIO\_Output &	Led\_Pin	\\
+		10&	PA0 & ADC1\_IN0 &	SENSOR\_1	\\
+		11&	PA1 & ADC1\_IN1 &	SENSOR\_2	\\
+		12&	PA2 & ADC1\_IN2 &	SENSOR\_3\\
+		13&	PA3 &	ADC1\_IN3&	SENSOR\_4 \\
+		14&	PA4 &	ADC1\_IN4&	SENSOR\_5\\
+		18&	PB0 &	TIM3\_CH3&	PWMB\\
+		19&	PB1 &	TIM3\_CH3&	PWMA\\
+		34&	PA13 &	SYS\_JTMS-SWDIO&	SYS\_JTMS-SWDIO\\
+		37&	PA14 &	SYS\_JTCK-SWCLK&	SYS\_JTCK-SWCLK\\
+		41&	PB5 &	GPIO\_Output&	AIN2\\
+		42&	PB6 &	GPIO\_Output&	AIN1\\
+		43&	PB7 &	GPIO\_Output&	STB\\
+		45&	PB8 &	GPIO\_Output&	BIN1\\
+		46&	PB9 &	GPIO\_Output&	BIN2\\
 		\hline
 	\end{tabular}
 	\caption{Konfiguracja pinów mikrokontrolera}
@@ -139,119 +146,236 @@ Sterowanie silnikami odbywać się będzie przy pomocy mostków-H. Algorytm ster
 \end{table}
 
 %Obecne we wszystkich dokumentach
-\subsection{I2C}
+\subsection{TIM3}
+\noindent Timer wykorzystywany był do generacji sygnału PWM przekazywanego na sterownik silników. Kanał 3 sterował kołem lewym, a kanał 4 kołem prawym.
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|c|} \hline
 		\textbf{Parametr} & Wartość \\
 		\hline
-		\hline  \textbf{I2C Speed Mode}&Standard Mode  \\\hline
-		\textbf{I2C Speed Frequency} & 100kHz\\
+		\hline  \textbf{Channel3}& PWM Generation CH3\\\hline
+		\textbf{Channel4} & PWM Generation CH4\\
+		\hline
+		\textbf{Prescaler} & 0\\
+		\hline	
+		\textbf{Counter Period} & 500\\
+		\hline	
+		\textbf{Trigger Event Selection} & Reset\\
 		\hline
 	\end{tabular}
-	\caption{Konfiguracja peryferium I2C}
-	\label{tab:I2C}
+	\caption{Konfiguracja peryferium TIM3}
+	\label{tab:TIM3}
 \end{table}
 
-\subsection{UART}
-Peryferium skonfigurowano na potrzeby debugowania.
+\subsection{ADC}
+\noindent ADC umożliwia odczyt pomiarów dokonywanych przez transoptory odbiciowe. Każdy kanał odpowiada za obsługę jednego czujnika. Odczyt realizowany jest z wykorzystaniem DMA.
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|c|} \hline
 		\textbf{Parametr} & Wartość \\
 		\hline
-		\hline  \textbf{Baud Rate}&\textcolor{blue}{9600}\\\hline
-		\textbf{Word Length } & 8 Bits (including parity)\\\hline
-		\textbf{Parity} &  None\\
+		\hline  \textbf{Data Alignment}& Right alignment\\\hline
+		\textbf{Scan Conversion Mode} & Enabled\\
 		\hline
-		\textbf{Stop Bits}& 1\\
+		\textbf{Enable Regular Conversions} & Enable\\
 		\hline
-		\textbf{Data Direction}& Receive and Transmit\\
+		\textbf{Number Of Conversion} & 5\\
+		\hline
+		\textbf{Rank} & 1..5\\
+		\hline
+		\textbf{Sampling Time} & 71.5 Cycles\\
 		\hline
 	\end{tabular}
-	\caption{Konfiguracja peryferium USART}
-	\label{tab:USART}
+	\caption{Konfiguracja peryferium ADC}
+	\label{tab:ADC}
 \end{table}
 
 \subsection{DMA}
+\noindent DMA skonfigurowano pod obsługę peryferium ADC. 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|c|} \hline
 		\textbf{Parametr} & Wartość \\
 		\hline
-		\hline  \textbf{DMA request}& DAC\_CH1\\\hline
-		\textbf{Stream} & DMA1\_Channel3\\
+		\hline  \textbf{DMA request}& ADC1\\\hline
+		\textbf{Stream} & DMA1\_Channel1\\
 		\hline
-		\textbf{Direction} & Memory To Peripheral\\
+		\textbf{Direction} & Peripheral To Memory\\
+		\hline
+		\textbf{Mode} & Circular\\
+		\hline
+		\textbf{Peripheral Increment} & Disable\\
+		\hline
+		\textbf{Memory Increment} & Enable\\
+		\hline
+		\textbf{Peripheral Data Width} & Word\\
+		\hline
+		\textbf{Memory Data Width} & Word\\
 		\hline
 	\end{tabular}
 	\caption{Konfiguracja peryferium DMA}
 	\label{tab:DAC}
 \end{table}
 
-%Obecne w dokumencie do etapu I
-\section{Harmonogram pracy}
+\section{Wykorzystane komponenty}
+\subsection{Mikrokontroler - STM32F103C8}
+\noindent Tani i popularny mikrokontroler na płytce z oscylatorem i wyprowadzonymi pinami do programowania/debugowania. Znany pod nazwą \textit{Blue pill} z uwagi na kolor soldermaski.
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{Zegar}& 72MHz\\\hline
+		\textbf{RAM} & 20KB\\
+		\hline
+		\textbf{Pamięć flash} & 64KB/128KB\\
+		\hline
+	\end{tabular}
+	\caption{Podstawowe parametry STM32F103}
+	\label{tab:MCU}
+\end{table}
+
+\subsection{Mostek H - TB6612FNG}
+\noindent Wydajny sterownik silników w małej obudowie SSOP24. Posiada zabezpieczenie przeciwko prądowi zwrotnemu z silników, wbudowany termiczny obwód odcinający, kondensatory filtrujące. Ma do wyboru cztery tryby pracy: swobodne hamowanie, gwałtowne hamowanie, napędzanie kół zgodnie z ruchem wskazówek zegara i przeciwnie do ruchu wskazówek zegara. 
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{Zasilanie silników (VMOT)}& od 4.5V do 13.5V\\\hline
+		\textbf{Zasilanie układu logicznego (VCC)} & od 2.7V do 5.5V\\
+		\hline
+		\textbf{Maks. prąd wyjściowy (na kanał)} & 3A\\
+		\hline
+				\textbf{Ciągły prąd wyjściowy (na kanał)} & 1A\\
+		\hline
+				\textbf{Maksymalna częstotliwość PWM} & 100kHz\\
+		\hline
+	\end{tabular}
+	\caption{Podstawowe parametry TB6612FNG}
+	\label{tab:Toshiba}
+\end{table}
+
+\subsection{Transoptor odbiciowy - CNY70}
+\noindent Czujnik wysyła wiązkę promieniowania przez diodę IR i następnie natężenie światła odbitego za pomocą fototranzystora. Wyjściem czujnika jest napięcie zależne od natężenia światła padającego na tranzystor. Im powierzchnia bardziej odbija światło (jest bardziej jasna) tym wyższe napięcie na wyjściu układu. 
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{Napięcie zasilania diody}& 5V\\\hline
+		\textbf{Maks. prąd diody} & 50mA\\
+		\hline
+		\textbf{Maks. napięcie kolektor-emiter} & 32V\\
+		\hline
+		\textbf{Maks. prąd kolektora} & 50mA\\
+		\hline
+	\end{tabular}
+	\caption{Podstawowe parametry CNY70}
+	\label{tab:CNY70}
+\end{table}
+
+\subsection{Stabilizator - LM7805}
+\noindent Stabilizator wykorzystywany do zasilania diody w czujnikach odbiciowych. 
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{Napięcie wyjściowe ($\pm 2\%$)}& 5V\\\hline
+		\textbf{Maks. prąd wyjściowy} & 1.5A\\
+		\hline
+		\textbf{Maks. napięcie wejściowe} & 35V\\
+		\hline
+	\end{tabular}
+	\caption{Podstawowe parametry LM7805}
+	\label{tab:LM7805}
+\end{table}
+
+\subsection{Stabilizator - LD1117V33}
+\noindent Stabilizator wykorzystywany do zasilania mikrokontrolera oraz układu logicznego sterownika silników.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{Napięcie wyjściowe ($\pm 2\%$)}& 3.3V\\\hline
+		\textbf{Maks. prąd wyjściowy} & 1.3A\\
+		\hline
+		\textbf{Maks. napięcie wejściowe} & 15V\\
+		\hline
+	\end{tabular}
+	\caption{Podstawowe parametry LD1117V33}
+	\label{tab:LD1117V33}
+\end{table}
+%Obecne w dokumencie do etapu I
+\section{Opis działania urządzenia}
+	Na starcie dochodzi do inicjalizacji mikrokontrolera wraz z wszystkimi jego peryferiami. Zasilane są transoptory oraz sterownik silników. Po inicjalizacji sterownik silników przechodzi ze stanu uśpienia w stan gotowości (sygnał wysoki na pin STB). W tym momencie po zarejestrowaniu czarnej linii pod jednym z czujników robot zaczyna za nią podążąć. Jeżeli robot zgubi linie to zostaje zatrzymany swobodnym hamowaniem (PWM = 0\%). 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{gantt_diagram.png}
-	\caption{Diagram Gantta}
-	\label{fig:DiagramGantta}
+	\includegraphics[width=0.9\textwidth]{flowchart.png}
+	\caption{Diagram obrazujący działanie urządzenia}
+	\label{fig:FlowChart}
+\end{figure}
+	
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.4\textwidth, angle = 90]{schemat.png}
+	\caption{Schemat układu}
+	\label{fig:Schemat}
 \end{figure}
 
-Kolejne kamienie milowe pokrywają się z etapami wyszczególnionymi w podrozdziale Podział pracy.
-%Obecne w dokumencie do etapu I
-\subsection{Podział pracy}
-
 \begin{table}[H]
 	\centering
-	\begin{tabular}{|L{7cm}|L{0.8cm}||L{7cm}|L{0.8cm}|}
+	\begin{tabular}{l|ll}
 		\hline
-		\hline
-		\textbf{Tomasz Masłoń} & 
-		\% & 
-		\textbf{Cyprian Hryniuk} & \%\\
-		\hline
-		\hline
-		Wstępna konfiguracja peryferiów w programie CubeMx		& &	
-		 	Wstępna konfiguracja peryferiów w programie CubeMx	&\\
-		\hline
-		Implementacja obsługi Audio DAC & &
-		 	Implementacja obsługi czujników odległości&\\
-		\hline
-		Opracowanie algorytmu generujacego falę dźwiękową na podstawie danych z czujników odległosci & &
-		Opracowanie algorytmu generującego falę dźwiękową na podstawie danych z czujników odległosci & \\
-		\hline
-		\end{tabular}
-	\caption{Podział pracy -- Etap II}
-	\label{tab:PodzialPracyEtap2}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|L{7cm}|L{0.8cm}||L{7cm}|L{0.8cm}|}
-		\hline
-		\hline
-		\textbf{Tomasz Masłoń} & 
-		\% & 
-		\textbf{Cyprian Hryniuk} & \%\\
-		\hline
-		\hline
-		Finalna konfiguracja peryferiów w programie CubeMX		& &	
-		Finalna konfiguracja peryferiów w programie CubeMX &\\
-		\hline
-		Opracowanie funkcji modyfikujacej brzmienie  & &
-		Opracowanie funkcji modyfikującej brzmienie &\\
-		\hline	
+		Part    & Value       & Device          \\ \hline
+		C1      & 100nF       & C-EU025-024X044 \\ \hline
+		C2      & 100nF       & C-EU025-024X044 \\ \hline
+		C3      & 10uF        & C-EU025-024X044 \\ \hline
+		C4      & 10uF        & C-EU025-024X044 \\ \hline
+		C5      & 100nF       & C-EU025-024X044 \\ \hline
+		IC2     & LD117V33     & LD117V33         \\ \hline
+		IC3     & 7805         & LM7805           \\ \hline
+		PC1     & CNY70       & CNY70           \\ \hline
+		PC2     & CNY70       & CNY70           \\ \hline
+		PC3     & CNY70       & CNY70           \\ \hline
+		PC4     & CNY70       & CNY70           \\ \hline
+		PC5     & CNY70       & CNY70           \\ \hline
+		R1      & 150         & R-EU\_0204/5    \\ \hline
+		R2      & 150         & R-EU\_0204/5    \\ \hline
+		R3      & 150         & R-EU\_0204/5    \\ \hline
+		R4      & 150         & R-EU\_0204/5    \\ \hline
+		R5      & 150         & R-EU\_0204/5    \\ \hline
+		R6      & 330         & R-EU\_0204/5    \\ \hline
+		R7      & 330         & R-EU\_0204/5    \\ \hline
+		R8      & 330         & R-EU\_0204/5    \\ \hline
+		R9      & 330         & R-EU\_0204/5    \\ \hline
+		R10     & 330         & R-EU\_0204/5    \\ \hline
+		R11     & 680         & R-EU\_0204/5    \\ \hline
+		R12     & 10k         & R-EU\_0204/5    \\ \hline
+		R13     & 680         & R-EU\_0204/5    \\ \hline
+		R14     & 10k         & R-EU\_0204/5    \\ \hline
+		R15     & 680         & R-EU\_0204/5    \\ \hline
+		R16     & 10k         & R-EU\_0204/5    \\ \hline
+		R17     & 680         & R-EU\_0204/5    \\ \hline
+		R18     & 10k         & R-EU\_0204/5    \\ \hline
+		R19     & 680         & R-EU\_0204/5    \\ \hline
+		R20     & 10k         & R-EU\_0204/5    \\ \hline
+		S1      & TL32PO      & SWITCH          \\ \hline
+		ST1     & STM32F103C8 & BLUE\_PILL      \\ \hline
+		TB66121 & TB6612FNG   & TB6612FNG       \\ \hline
 	\end{tabular}
-	\caption{Podział pracy -- Etap III}
-	\label{tab:PodzialPracyEtap3}
+	\caption{Zestawienie komponentów}
 \end{table}
-
-
 %Obecne we wszystkich dokumentach
 \section{Podsumowanie}
-Projekt dotyczy stworzenia instrumentu muzycznego - theremina, przy wykorzystaniu cyfrowych czujników odległościowych oraz Audio DAC.
+
 
 \newpage
 \addcontentsline{toc}{section}{Bibilografia}
