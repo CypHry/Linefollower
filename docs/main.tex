@@ -115,7 +115,7 @@ Sterowanie silnikami odbywać się będzie przy pomocy mostków-H. Algorytm ster
 \end{figure}
 
 %Obecne we wszystkich dokumentach
-
+\newpage
 \subsection{Konfiguracja pinów}
 \noindent Poniżej zawarto konfiguracje pinów mikrokontrolera wraz z etykietami i trybem pracy.
 \begin{table}[H]
@@ -189,7 +189,7 @@ Sterowanie silnikami odbywać się będzie przy pomocy mostków-H. Algorytm ster
 	\caption{Konfiguracja peryferium ADC}
 	\label{tab:ADC}
 \end{table}
-
+\newpage
 \subsection{DMA}
 \noindent DMA skonfigurowano pod obsługę peryferium ADC. 
 \begin{table}[H]
@@ -218,8 +218,8 @@ Sterowanie silnikami odbywać się będzie przy pomocy mostków-H. Algorytm ster
 \end{table}
 
 \section{Wykorzystane komponenty}
-\subsection{Mikrokontroler - STM32F103C8}
-\noindent Tani i popularny mikrokontroler na płytce z oscylatorem i wyprowadzonymi pinami do programowania/debugowania. Znany pod nazwą \textit{Blue pill} z uwagi na kolor soldermaski.
+\subsection{Mikrokontroler - STM32F103C8\cite{MCU}}
+\noindent Tani i popularny mikrokontroler na płytce z oscylatorem i wyprowadzonymi pinami do programowania i debugowania. Znany pod nazwą \textit{Blue pill} z uwagi na kolor soldermaski.
 
 \begin{table}[H]
 	\centering
@@ -236,7 +236,7 @@ Sterowanie silnikami odbywać się będzie przy pomocy mostków-H. Algorytm ster
 	\label{tab:MCU}
 \end{table}
 
-\subsection{Mostek H - TB6612FNG}
+\subsection{Mostek H - TB6612FNG\cite{Toshiba}}
 \noindent Wydajny sterownik silników w małej obudowie SSOP24. Posiada zabezpieczenie przeciwko prądowi zwrotnemu z silników, wbudowany termiczny obwód odcinający, kondensatory filtrujące. Ma do wyboru cztery tryby pracy: swobodne hamowanie, gwałtowne hamowanie, napędzanie kół zgodnie z ruchem wskazówek zegara i przeciwnie do ruchu wskazówek zegara. 
 
 \begin{table}[H]
@@ -257,8 +257,8 @@ Sterowanie silnikami odbywać się będzie przy pomocy mostków-H. Algorytm ster
 	\caption{Podstawowe parametry TB6612FNG}
 	\label{tab:Toshiba}
 \end{table}
-
-\subsection{Transoptor odbiciowy - CNY70}
+\newpage
+\subsection{Transoptor odbiciowy - CNY70\cite{Vishay}}
 \noindent Czujnik wysyła wiązkę promieniowania przez diodę IR i następnie natężenie światła odbitego za pomocą fototranzystora. Wyjściem czujnika jest napięcie zależne od natężenia światła padającego na tranzystor. Im powierzchnia bardziej odbija światło (jest bardziej jasna) tym wyższe napięcie na wyjściu układu. 
 
 \begin{table}[H]
@@ -278,7 +278,7 @@ Sterowanie silnikami odbywać się będzie przy pomocy mostków-H. Algorytm ster
 	\label{tab:CNY70}
 \end{table}
 
-\subsection{Stabilizator - LM7805}
+\subsection{Stabilizator - LM7805\cite{LM7805}}
 \noindent Stabilizator wykorzystywany do zasilania diody w czujnikach odbiciowych. 
 
 \begin{table}[H]
@@ -296,7 +296,7 @@ Sterowanie silnikami odbywać się będzie przy pomocy mostków-H. Algorytm ster
 	\label{tab:LM7805}
 \end{table}
 
-\subsection{Stabilizator - LD1117V33}
+\subsection{Stabilizator - LD1117V33\cite{LD117}}
 \noindent Stabilizator wykorzystywany do zasilania mikrokontrolera oraz układu logicznego sterownika silników.
 
 \begin{table}[H]
@@ -314,6 +314,7 @@ Sterowanie silnikami odbywać się będzie przy pomocy mostków-H. Algorytm ster
 	\label{tab:LD1117V33}
 \end{table}
 %Obecne w dokumencie do etapu I
+\newpage
 \section{Opis działania urządzenia}
 	Na starcie dochodzi do inicjalizacji mikrokontrolera wraz z wszystkimi jego peryferiami. Zasilane są transoptory oraz sterownik silników. Po inicjalizacji sterownik silników przechodzi ze stanu uśpienia w stan gotowości (sygnał wysoki na pin STB). W tym momencie po zarejestrowaniu czarnej linii pod jednym z czujników robot zaczyna za nią podążąć. Jeżeli robot zgubi linie to zostaje zatrzymany swobodnym hamowaniem (PWM = 0\%). 
 \begin{figure}[H]

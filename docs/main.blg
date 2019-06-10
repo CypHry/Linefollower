@@ -3,25 +3,29 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: main.aux
 The style file: plabbrv.bst
 Database file #1: bibliografia.bib
+Warning--string name "december" is undefined
+--line 9 of file bibliografia.bib
 Warning--string name "november" is undefined
---line 18 of file bibliografia.bib
-Warning--string name "march" is undefined
---line 27 of file bibliografia.bib
-Warning--empty note in CS43L22
-Warning--empty note in AN3126
-Warning--empty note in DevBoard
+--line 17 of file bibliografia.bib
+Warning--string name "july" is undefined
+--line 26 of file bibliografia.bib
+Warning--string name "november" is undefined
+--line 42 of file bibliografia.bib
+Warning--empty note in LD117
 Warning--empty note in MCU
-Warning--empty note in VL53L1X
+Warning--empty note in LM7805
+Warning--empty note in Toshiba
+Warning--empty note in Vishay
 You've used 5 entries,
             2129 wiz_defined-function locations,
-            523 strings with 4089 characters,
-and the built_in function-call counts, 901 in all, are:
+            524 strings with 4062 characters,
+and the built_in function-call counts, 897 in all, are:
 = -- 90
 > -- 35
 < -- 0
 + -- 15
 - -- 10
-* -- 48
+* -- 44
 := -- 189
 add.period$ -- 15
 call.type$ -- 5
@@ -53,4 +57,4 @@ warning$ -- 5
 while$ -- 10
 width$ -- 6
 write$ -- 47
-(There were 7 warnings)
+(There were 9 warnings)

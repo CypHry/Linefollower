@@ -1,29 +1,29 @@
 \begin{thebibliography}{1}
 
-\bibitem{CS43L22}
-CirrusLogic.
-\newblock {CS43L22 Datasheet}.
-\newblock 2010.
-
-\bibitem{AN3126}
+\bibitem{LD117}
 STMicroelectronics.
-\newblock {AN3126 Application note Audio and waveform generation using the DAC
-  in STM32 microcontrollers}.
-\newblock Maj 2017.
-
-\bibitem{DevBoard}
-STMicroelectronics.
-\newblock {UM1879 User manual Discovery kit with STM32L476VG MCU}.
-\newblock Maj 2017.
+\newblock {LD117 Datasheet}.
+\newblock 2013.
 
 \bibitem{MCU}
 STMicroelectronics.
-\newblock {STM32L476xx Datasheet}.
-\newblock Maj 2018.
-
-\bibitem{VL53L1X}
-STMicroelectronics.
-\newblock {VL53L1X Datasheet}.
+\newblock {RM0008 Reference manual STM32F101xx, STM32F102xx, STM32F103xx,
+  STM32F105xx andSTM32F107xx advanced Arm®-based 32-bit MCUs}.
 \newblock 2018.
+
+\bibitem{LM7805}
+TI.
+\newblock {LM7805 Datasheet}.
+\newblock Maj 2003.
+
+\bibitem{Toshiba}
+Toshiba.
+\newblock {TB6612FNG Datasheet}.
+\newblock 2018.
+
+\bibitem{Vishay}
+Vishay.
+\newblock {CNY70 Datasheet}.
+\newblock 2012.
 
 \end{thebibliography}
