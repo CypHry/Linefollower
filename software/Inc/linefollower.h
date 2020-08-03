@@ -1,0 +1,25 @@
+/*
+ * linefollower.h
+ *
+ *  Created on: 5 Apr 2019
+ *      Author: cyprian
+ */
+
+#ifndef __LINEFOLLOWER_H
+#define __LINEFOLLOWER_H
+
+#include "PD_controller.h"
+
+#define BASE_PWM_PULSE 		200
+
+typedef struct
+{
+	int32_t pulse_L;
+	int32_t pulse_R;
+} LF;
+
+void LF_Init(LF* lf);
+void LF_Stop(LF* lf);
+void LF_SetPWMPulse(LF* lf, PD_CONTROLLER pd);
+
+#endif /* __LINEFOLLOWER_h */

@@ -82,8 +82,33 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define Led_Pin_Pin GPIO_PIN_13
 #define Led_Pin_GPIO_Port GPIOC
+#define SENSOR_1_Pin GPIO_PIN_0
+#define SENSOR_1_GPIO_Port GPIOA
+#define SENSOR_2_Pin GPIO_PIN_1
+#define SENSOR_2_GPIO_Port GPIOA
+#define SENSOR_3_Pin GPIO_PIN_2
+#define SENSOR_3_GPIO_Port GPIOA
+#define SENSOR_4_Pin GPIO_PIN_3
+#define SENSOR_4_GPIO_Port GPIOA
+#define SENSOR_5_Pin GPIO_PIN_4
+#define SENSOR_5_GPIO_Port GPIOA
+#define PWMB_Pin GPIO_PIN_0
+#define PWMB_GPIO_Port GPIOB
+#define PWMA_Pin GPIO_PIN_1
+#define PWMA_GPIO_Port GPIOB
+#define AIN2_Pin GPIO_PIN_5
+#define AIN2_GPIO_Port GPIOB
+#define AIN1_Pin GPIO_PIN_6
+#define AIN1_GPIO_Port GPIOB
+#define STB_Pin GPIO_PIN_7
+#define STB_GPIO_Port GPIOB
+#define BIN1_Pin GPIO_PIN_8
+#define BIN1_GPIO_Port GPIOB
+#define BIN2_Pin GPIO_PIN_9
+#define BIN2_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-
+#define ADC_TIMEOUT 10
+#define ADC_THRESHOLD 500
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
