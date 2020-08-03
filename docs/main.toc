@@ -1,0 +1,16 @@
+\babel@toc {polish}{}
+\contentsline {section}{\numberline {1}Opis projektu}{2}{section.1}
+\contentsline {section}{\numberline {2}Konfiguracja mikrokontrolera}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}Konfiguracja pin\IeC {\'o}w}{4}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}TIM3}{4}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}ADC}{4}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}DMA}{5}{subsection.2.4}
+\contentsline {section}{\numberline {3}Wykorzystane komponenty}{5}{section.3}
+\contentsline {subsection}{\numberline {3.1}Mikrokontroler - STM32F103C8\cite {MCU}}{5}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Mostek H - TB6612FNG\cite {Toshiba}}{5}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Transoptor odbiciowy - CNY70\cite {Vishay}}{6}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Stabilizator - LM7805\cite {LM7805}}{6}{subsection.3.4}
+\contentsline {subsection}{\numberline {3.5}Stabilizator - LD1117V33\cite {LD117}}{6}{subsection.3.5}
+\contentsline {section}{\numberline {4}Opis dzia\IeC {\l }ania urz\IeC {\k a}dzenia}{7}{section.4}
+\contentsline {section}{\numberline {5}Podsumowanie}{9}{section.5}
+\contentsline {section}{Bibilografia}{10}{section.5}

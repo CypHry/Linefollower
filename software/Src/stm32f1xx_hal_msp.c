@@ -236,6 +236,7 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim)
     PB1     ------> TIM3_CH4 
     */
     GPIO_InitStruct.Pin = PWMB_Pin|PWMA_Pin;
+
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
@@ -255,6 +256,7 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim)
 void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim_pwm)
 {
   if(htim_pwm->Instance==TIM3)
+
   {
   /* USER CODE BEGIN TIM3_MspDeInit 0 */
 

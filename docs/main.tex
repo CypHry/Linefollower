@@ -1,0 +1,391 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = pl_PL
+
+% $Id:$
+
+%Author: Wojciech Domski
+%Szablon do ząłożeń projektowych, raportu i dokumentacji z steorwników robotów
+%Wersja v.1.0.0
+%
+
+
+%% Konfiguracja:
+\newcommand{\kurs}{Roboty mobilne}
+\newcommand{\formakursu}{Projekt}
+
+%odkomentuj właściwy typ projektu, a pozostałe zostaw zakomentowane
+%\newcommand{\doctype}{Za\l{}o\.{z}enia projektowe} %etap I
+%\newcommand{\doctype}{Raport} %etap II
+\newcommand{\doctype}{Dokumentacja} %etap III
+
+%wpisz nazwę projektu
+\newcommand{\projectname}{Linefollower}
+
+%wpisz akronim projektu
+\newcommand{\acronim}{LF}
+
+%wpisz Imię i nazwisko oraz numer albumu
+\newcommand{\osobaA}{Cyprian \textsc{Hryniuk}, 235512}
+%w przypadku projektu jednoosobowego usuń zawartość nowej komendy
+\newcommand{\osobaB}{Tomasz \textsc{Mas\l{}o\'n}, 235827}
+
+%wpisz termin w formie, jak poniżej dzień, parzystość, godzina
+\newcommand{\termin}{wtTP15}
+
+%wpisz imię i nazwisko prowadzącego
+\newcommand{\prowadzacy}{mgr in\.{z}. Micha\l{} \textsc{B\l{}\k{e}dowski}}
+
+\documentclass[10pt, a4paper]{article}
+
+\include{preambula}
+\graphicspath{{./img/}}
+
+\begin{document}
+
+\def\tablename{Tabela}	%zmienienie nazwy tabel z Tablica na Tabela
+
+\begin{titlepage}
+	\begin{center}
+		\textsc{\LARGE \formakursu}\\[1cm]		
+		\textsc{\Large \kurs}\\[0.5cm]		
+		\rule{\textwidth}{0.08cm}\\[0.4cm]
+		{\huge \bfseries \doctype}\\[1cm]
+		{\huge \bfseries \projectname}\\[0.5cm]
+		{\huge \bfseries \acronim}\\[0.4cm]
+		\rule{\textwidth}{0.08cm}\\[1cm]
+		
+		\begin{flushright} \large
+		\emph{Skład grupy:}\\
+		\osobaA\\
+		\osobaB\\[0.4cm]
+		
+		\emph{Termin: }\termin\\[0.4cm]
+
+		\emph{Prowadzący:} \\
+		\prowadzacy \\
+		
+		\end{flushright}
+		
+		\vfill
+		
+		{\large \today}
+	\end{center}	
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+%Obecne we wszystkich dokumentach
+\section{Opis projektu}
+\label{sec:OpisProjektu}
+Projekt ma na celu stworzenie linefollowera - robota klasy k(2,0) poruszającego się po wyznaczonej linii. Prace projektowe zawierać w sobie będą projekt i wykonanie układu mechanicznego i układu elektronicznego, wytworzenie oprogramowania oraz montaż robota.
+
+Robot będzie wykrywać linię za pomocą zestawu czujników odbiciowych. Sygnał z czujników przekazywany będzie do mikrokontrolera, który w oparciu o dane z czujników, będzie sterował silnikami prądu stałego pełniącymi rolę napędową kół. Całość zasilana będzie akumulatorem litowo-polimerowym.
+
+Sterowanie silnikami odbywać się będzie przy pomocy mostków-H. Algorytm sterujący wykorzystywać będzie regulator PD (w którym błąd będzie określany na podstawie sygnałów z czujników i odzwierciedlać będzie odbieganie toru jazdy od aktualnego kierunku, w którym linefollower się porusza), aby płynnie reagować na zmiany toru jazdy.
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[width=0.8\textwidth]{architektura.png}
+%	\caption{Architektura systemu}
+%	\label{fig:Architektura}
+%\end{figure}
+
+
+%\section{Założenia projektowe}
+%?????
+
+ 
+%Obecne we wszystkich dokumentach
+\section{Konfiguracja mikrokontrolera}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{konfiguracja_mcu.png}
+	\caption{Konfiguracja wyjść mikrokontrolera w programie STM32CubeMX}
+	\label{fig:KonfiguracjaMikrokontrolera}
+\end{figure}
+
+\newpage
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{konfiguracja_clk.png}
+	\caption{Konfiguracja zegarów mikrokontrolera}
+	\label{fig:KonfiguracjaZegara}
+\end{figure}
+
+%Obecne we wszystkich dokumentach
+\newpage
+\subsection{Konfiguracja pinów}
+\noindent Poniżej zawarto konfiguracje pinów mikrokontrolera wraz z etykietami i trybem pracy.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|l|}
+		\hline
+		Numer pinu	&	PIN & Tryb pracy & Funkcja/etykieta\\
+		\hline
+		2&	PC13 & GPIO\_Output &	Led\_Pin	\\
+		10&	PA0 & ADC1\_IN0 &	SENSOR\_1	\\
+		11&	PA1 & ADC1\_IN1 &	SENSOR\_2	\\
+		12&	PA2 & ADC1\_IN2 &	SENSOR\_3\\
+		13&	PA3 &	ADC1\_IN3&	SENSOR\_4 \\
+		14&	PA4 &	ADC1\_IN4&	SENSOR\_5\\
+		18&	PB0 &	TIM3\_CH3&	PWMB\\
+		19&	PB1 &	TIM3\_CH3&	PWMA\\
+		34&	PA13 &	SYS\_JTMS-SWDIO&	SYS\_JTMS-SWDIO\\
+		37&	PA14 &	SYS\_JTCK-SWCLK&	SYS\_JTCK-SWCLK\\
+		41&	PB5 &	GPIO\_Output&	AIN2\\
+		42&	PB6 &	GPIO\_Output&	AIN1\\
+		43&	PB7 &	GPIO\_Output&	STB\\
+		45&	PB8 &	GPIO\_Output&	BIN1\\
+		46&	PB9 &	GPIO\_Output&	BIN2\\
+		\hline
+	\end{tabular}
+	\caption{Konfiguracja pinów mikrokontrolera}
+	\label{tab:KonfiguracjaPinów}	
+\end{table}
+
+%Obecne we wszystkich dokumentach
+\subsection{TIM3}
+\noindent Timer wykorzystywany był do generacji sygnału PWM przekazywanego na sterownik silników. Kanał 3 sterował kołem lewym, a kanał 4 kołem prawym.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{Channel3}& PWM Generation CH3\\\hline
+		\textbf{Channel4} & PWM Generation CH4\\
+		\hline
+		\textbf{Prescaler} & 0\\
+		\hline	
+		\textbf{Counter Period} & 500\\
+		\hline	
+		\textbf{Trigger Event Selection} & Reset\\
+		\hline
+	\end{tabular}
+	\caption{Konfiguracja peryferium TIM3}
+	\label{tab:TIM3}
+\end{table}
+
+\subsection{ADC}
+\noindent ADC umożliwia odczyt pomiarów dokonywanych przez transoptory odbiciowe. Każdy kanał odpowiada za obsługę jednego czujnika. Odczyt realizowany jest z wykorzystaniem DMA.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{Data Alignment}& Right alignment\\\hline
+		\textbf{Scan Conversion Mode} & Enabled\\
+		\hline
+		\textbf{Enable Regular Conversions} & Enable\\
+		\hline
+		\textbf{Number Of Conversion} & 5\\
+		\hline
+		\textbf{Rank} & 1..5\\
+		\hline
+		\textbf{Sampling Time} & 71.5 Cycles\\
+		\hline
+	\end{tabular}
+	\caption{Konfiguracja peryferium ADC}
+	\label{tab:ADC}
+\end{table}
+\newpage
+\subsection{DMA}
+\noindent DMA skonfigurowano pod obsługę peryferium ADC. 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{DMA request}& ADC1\\\hline
+		\textbf{Stream} & DMA1\_Channel1\\
+		\hline
+		\textbf{Direction} & Peripheral To Memory\\
+		\hline
+		\textbf{Mode} & Circular\\
+		\hline
+		\textbf{Peripheral Increment} & Disable\\
+		\hline
+		\textbf{Memory Increment} & Enable\\
+		\hline
+		\textbf{Peripheral Data Width} & Word\\
+		\hline
+		\textbf{Memory Data Width} & Word\\
+		\hline
+	\end{tabular}
+	\caption{Konfiguracja peryferium DMA}
+	\label{tab:DAC}
+\end{table}
+
+\section{Wykorzystane komponenty}
+\subsection{Mikrokontroler - STM32F103C8\cite{MCU}}
+\noindent Tani i popularny mikrokontroler na płytce z oscylatorem i wyprowadzonymi pinami do programowania i debugowania. Znany pod nazwą \textit{Blue pill} z uwagi na kolor soldermaski.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{Zegar}& 72MHz\\\hline
+		\textbf{RAM} & 20KB\\
+		\hline
+		\textbf{Pamięć flash} & 64KB/128KB\\
+		\hline
+	\end{tabular}
+	\caption{Podstawowe parametry STM32F103}
+	\label{tab:MCU}
+\end{table}
+
+\subsection{Mostek H - TB6612FNG\cite{Toshiba}}
+\noindent Wydajny sterownik silników w małej obudowie SSOP24. Posiada zabezpieczenie przeciwko prądowi zwrotnemu z silników, wbudowany termiczny obwód odcinający, kondensatory filtrujące. Ma do wyboru cztery tryby pracy: swobodne hamowanie, gwałtowne hamowanie, napędzanie kół zgodnie z ruchem wskazówek zegara i przeciwnie do ruchu wskazówek zegara. 
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{Zasilanie silników (VMOT)}& od 4.5V do 13.5V\\\hline
+		\textbf{Zasilanie układu logicznego (VCC)} & od 2.7V do 5.5V\\
+		\hline
+		\textbf{Maks. prąd wyjściowy (na kanał)} & 3A\\
+		\hline
+				\textbf{Ciągły prąd wyjściowy (na kanał)} & 1A\\
+		\hline
+				\textbf{Maksymalna częstotliwość PWM} & 100kHz\\
+		\hline
+	\end{tabular}
+	\caption{Podstawowe parametry TB6612FNG}
+	\label{tab:Toshiba}
+\end{table}
+\newpage
+\subsection{Transoptor odbiciowy - CNY70\cite{Vishay}}
+\noindent Czujnik wysyła wiązkę promieniowania przez diodę IR i następnie natężenie światła odbitego za pomocą fototranzystora. Wyjściem czujnika jest napięcie zależne od natężenia światła padającego na tranzystor. Im powierzchnia bardziej odbija światło (jest bardziej jasna) tym wyższe napięcie na wyjściu układu. 
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{Napięcie zasilania diody}& 5V\\\hline
+		\textbf{Maks. prąd diody} & 50mA\\
+		\hline
+		\textbf{Maks. napięcie kolektor-emiter} & 32V\\
+		\hline
+		\textbf{Maks. prąd kolektora} & 50mA\\
+		\hline
+	\end{tabular}
+	\caption{Podstawowe parametry CNY70}
+	\label{tab:CNY70}
+\end{table}
+
+\subsection{Stabilizator - LM7805\cite{LM7805}}
+\noindent Stabilizator wykorzystywany do zasilania diody w czujnikach odbiciowych. 
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{Napięcie wyjściowe ($\pm 2\%$)}& 5V\\\hline
+		\textbf{Maks. prąd wyjściowy} & 1.5A\\
+		\hline
+		\textbf{Maks. napięcie wejściowe} & 35V\\
+		\hline
+	\end{tabular}
+	\caption{Podstawowe parametry LM7805}
+	\label{tab:LM7805}
+\end{table}
+
+\subsection{Stabilizator - LD1117V33\cite{LD117}}
+\noindent Stabilizator wykorzystywany do zasilania mikrokontrolera oraz układu logicznego sterownika silników.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|} \hline
+		\textbf{Parametr} & Wartość \\
+		\hline
+		\hline  \textbf{Napięcie wyjściowe ($\pm 2\%$)}& 3.3V\\\hline
+		\textbf{Maks. prąd wyjściowy} & 1.3A\\
+		\hline
+		\textbf{Maks. napięcie wejściowe} & 15V\\
+		\hline
+	\end{tabular}
+	\caption{Podstawowe parametry LD1117V33}
+	\label{tab:LD1117V33}
+\end{table}
+%Obecne w dokumencie do etapu I
+\newpage
+\section{Opis działania urządzenia}
+	Na starcie dochodzi do inicjalizacji mikrokontrolera wraz z wszystkimi jego peryferiami. Zasilane są transoptory oraz sterownik silników. Po inicjalizacji sterownik silników przechodzi ze stanu uśpienia w stan gotowości (sygnał wysoki na pin STB). W tym momencie po zarejestrowaniu czarnej linii pod jednym z czujników robot zaczyna za nią podążąć. Jeżeli robot zgubi linie to zostaje zatrzymany swobodnym hamowaniem (PWM = 0\%). 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{flowchart.png}
+	\caption{Diagram obrazujący działanie urządzenia}
+	\label{fig:FlowChart}
+\end{figure}
+	
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.4\textwidth, angle = 90]{schemat.png}
+	\caption{Schemat układu}
+	\label{fig:Schemat}
+\end{figure}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{l|ll}
+		\hline
+		Part    & Value       & Device          \\ \hline
+		C1      & 100nF       & C-EU025-024X044 \\ \hline
+		C2      & 100nF       & C-EU025-024X044 \\ \hline
+		C3      & 10uF        & C-EU025-024X044 \\ \hline
+		C4      & 10uF        & C-EU025-024X044 \\ \hline
+		C5      & 100nF       & C-EU025-024X044 \\ \hline
+		IC2     & LD117V33     & LD117V33         \\ \hline
+		IC3     & 7805         & LM7805           \\ \hline
+		PC1     & CNY70       & CNY70           \\ \hline
+		PC2     & CNY70       & CNY70           \\ \hline
+		PC3     & CNY70       & CNY70           \\ \hline
+		PC4     & CNY70       & CNY70           \\ \hline
+		PC5     & CNY70       & CNY70           \\ \hline
+		R1      & 150         & R-EU\_0204/5    \\ \hline
+		R2      & 150         & R-EU\_0204/5    \\ \hline
+		R3      & 150         & R-EU\_0204/5    \\ \hline
+		R4      & 150         & R-EU\_0204/5    \\ \hline
+		R5      & 150         & R-EU\_0204/5    \\ \hline
+		R6      & 330         & R-EU\_0204/5    \\ \hline
+		R7      & 330         & R-EU\_0204/5    \\ \hline
+		R8      & 330         & R-EU\_0204/5    \\ \hline
+		R9      & 330         & R-EU\_0204/5    \\ \hline
+		R10     & 330         & R-EU\_0204/5    \\ \hline
+		R11     & 680         & R-EU\_0204/5    \\ \hline
+		R12     & 10k         & R-EU\_0204/5    \\ \hline
+		R13     & 680         & R-EU\_0204/5    \\ \hline
+		R14     & 10k         & R-EU\_0204/5    \\ \hline
+		R15     & 680         & R-EU\_0204/5    \\ \hline
+		R16     & 10k         & R-EU\_0204/5    \\ \hline
+		R17     & 680         & R-EU\_0204/5    \\ \hline
+		R18     & 10k         & R-EU\_0204/5    \\ \hline
+		R19     & 680         & R-EU\_0204/5    \\ \hline
+		R20     & 10k         & R-EU\_0204/5    \\ \hline
+		S1      & TL32PO      & SWITCH          \\ \hline
+		ST1     & STM32F103C8 & BLUE\_PILL      \\ \hline
+		TB66121 & TB6612FNG   & TB6612FNG       \\ \hline
+	\end{tabular}
+	\caption{Zestawienie komponentów}
+\end{table}
+%Obecne we wszystkich dokumentach
+\section{Podsumowanie}
+
+W końcowej fazie pracy nad projektem pojawił się problem, którego nie udało się nam rozwiązać. Jeden z silników ma zdecydowanie mniejszą moc niż drugi, co najprawdopodobniej jest wadą samego silnika. Przy ustawianiu tego samego wypełnienia do sterowania jednym i drugim silnikiem jest widoczna różnica w prędkości obrotu kół nawet jeżeli robot jest w powietrzu. Moc na wadliwym silniku jest na tyle mała, że nie jest on w stanie sam ruszyć robota (drugi silnik nie ma z tym najmniejszych problemów) przez co niemożliwe jest wysterowanie torem jazdy tak, aby podążał po linii, ponieważ robot zatrzymuje się w momencie kiedy korekcji toru jazdy musi dokonać wspomniany silnik.
+
+Resztę projektu uznać można za udaną. Układ zasilający dobrze spełnia swoją rolę, dobrze działają pomiary czujników odbiciowych, sprawny silnik poprawnie reaguje na ustawienie linii, co razem z przeprowadzonymi przez nas testami sprawdzającymi wartości wypełnienia PWM w poszczególnych przypadkach ułożenia linii pozwala stwierdzić, że sterowanie również jest napisane poprawnie oraz przypuszczać, że przy wymianie silnika linefollower działałby w całości tak jak powinien.
+
+
+\newpage
+\addcontentsline{toc}{section}{Bibilografia}
+\bibliography{bibliografia}
+\bibliographystyle{plabbrv}
+
+
+\end{document}
